@@ -1,8 +1,8 @@
 class Todo{
-   String title;
-   String description;
-   bool checked = false;
+    String title;
+    String description;
+    bool checked;
+    int id;
 
-  Todo({this.title,this.description,this.checked});
-  Todo.defConst({this.title,this.description});
+    Todo({this.title,this.description,this.id,this.checked = false});
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todoflutter/todo/createtodo.dart';
 import 'backend/todo/todo.dart';
 class TodoList extends StatefulWidget{
   
@@ -16,25 +17,52 @@ class _TodoListState extends State<TodoList>{
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.fromLTRB(2, 8, 2, 8),
         itemCount: widget.todos.length,
         itemBuilder: (BuildContext context, int index) {
-          return Card(
-              child: ListTile(
-              leading: Checkbox(
-                value: widget.todos[index].checked,
-                onChanged: (bool value){
-                  setState(() {
-                    widget.todos[index].checked = value;
-                  });
-                },
+        return Card(
+            elevation: 2,
+            child: ClipPath(
+              //rounded corner 
+                clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3))
+                          ),
+                child: Container(
+                //border color
+                decoration: BoxDecoration(
+                border: Border(left: BorderSide(color: Colors.blueAccent, width: 4))),
+                child: ListTile(
+                      title: Text(widget.todos[index].title),
+                      subtitle: Text(widget.todos[index].description),
+                      leading: Checkbox(
+                        value: widget.todos[index].checked,
+                        onChanged: (bool value){
+                          setState(() {
+                            widget.todos[index].checked = value;
+                          });
+                      },
+                    ),
+                    onTap: () => _buttonTapped(index),
+                  ),
               ),
-              title: Text(widget.todos[index].title),
-              subtitle: Text(widget.todos[index].description),
-            )
+            ),
           );
         },
       separatorBuilder: (BuildContext context, int index) => const Divider(),
     );
+  }
+    Future _buttonTapped(int index) async {
+      final dataFromSecondPage = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => new CreateTodo(todo:widget.todos[index]))) as Todo;
+  
+    if (dataFromSecondPage != null) {
+       final todo = widget.todos.firstWhere((element) => element.id == index);
+
+      setState(() {
+        todo.title = dataFromSecondPage.title;
+        todo.description = dataFromSecondPage.description;
+      });
+    }
   }
 }

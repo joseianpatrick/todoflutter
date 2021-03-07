@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'todolist.dart';
 import 'backend/todo/todo.dart';
+import 'createtodo.dart';
+import 'dart:async' show Future;
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.todo}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  final Todo todo;
 
-  final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -46,7 +41,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           FlatButton(
             onPressed: () {
-              todos.add(new Todo.defConst(title:_todoTitleController.text,description:_todoDescriptionController.text));
+              Todo todo = new Todo(title: _todoTitleController.text,description: _todoDescriptionController.text);
+              todos.add(todo);
+              //redraw stateful widget
               setState(() {}); 
             }, 
             child: Text('Save')
@@ -91,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               todos.removeWhere((element) => element.checked);
               setState(() {}); 
+              Navigator.pop(context);
             }, 
             child: Text(
               'Delete',
@@ -98,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
               )
           )
         ],
-        title: Text('Delete Todo'),
+        title: Text('Delete Todo/s'),
       );
     });
   }
@@ -107,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text("To Do List"),
         actions: [
           IconButton(
             icon: Icon(
@@ -119,13 +117,29 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body:TodoList(todos: todos),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showFormAddTodoDialog(context),
         tooltip: 'Create To Do',
         child: Icon(Icons.add),
-      ), 
+      //   onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder:(context) => CreateTodo()
+        
+      //   ),
+      // ),
+      onPressed: () =>  _buttonTapped(), 
+      )
     );
   }
+
+  //in android this is like startactivityfor result
+  Future _buttonTapped() async {
+      final dataFromSecondPage = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => new CreateTodo())) as Todo;
   
+    if (dataFromSecondPage != null) {
+      setState(() {
+        todos.add(new Todo(title: dataFromSecondPage.title,description: dataFromSecondPage.description,id: (todos.length)));
+      });
+    }
+  }
 }
 
 
