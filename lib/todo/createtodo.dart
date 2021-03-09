@@ -1,28 +1,40 @@
 import 'package:flutter/material.dart';
-import 'backend/todo/todo.dart';
+import 'package:todoflutter/todo/presenter/TodoCreatePresenter.dart';
+import 'package:todoflutter/todo/view/TodoCreateView.dart';
 
 class CreateTodo extends StatefulWidget {
 
-  final Todo todo;
+  static const routeName = '/createtodo';
 
-  CreateTodo({Key key,this.todo}): super(key:key);
+  final TodoCreatePresenter todoCreatePresenter;
+
+  CreateTodo({this.todoCreatePresenter,Key key}): super(key:key);
 
   @override
   _CreateTodoState createState() => _CreateTodoState();
 }
 
-class _CreateTodoState extends State<CreateTodo> {
+class _CreateTodoState extends State<CreateTodo> implements TodoCreateView{
   
-
   var _todoTitleController = TextEditingController();
   var _todoDescriptionController = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.todoCreatePresenter.todoCreateView = this;
+  }
+  
+
+  @override
   Widget build(BuildContext context) {
-    if(widget.todo!=null){
-      _todoTitleController.text = widget.todo.title ;
-      _todoDescriptionController.text = widget.todo.description ;
-    }
+    widget.todoCreatePresenter.getArgs();
+  //  final Todo args = ModalRoute.of(context).settings.arguments;
+  //   if(args!=null){
+  //     _todoTitleController.text = args.title ;
+  //     _todoDescriptionController.text = args.description ;
+  //   }
     return Scaffold(
       appBar: AppBar(
         title: Text("Todo"),
@@ -50,10 +62,7 @@ class _CreateTodoState extends State<CreateTodo> {
                     child: 
                       ElevatedButton(
                         onPressed: () {
-                          Todo todo = new Todo(title: _todoTitleController.text,description: _todoDescriptionController.text);
-                          // Navigator.of(context).pop({'selection':todo});
-                          Navigator.pop(context,todo);
-                          print('test button save');
+                          widget.todoCreatePresenter.saveClick();
                         }, 
                         child: Text('Save')
                     ),
@@ -63,5 +72,35 @@ class _CreateTodoState extends State<CreateTodo> {
           ),
         ),
       );
+  }
+
+  @override
+  String getDescription() {
+    // TODO: implement getDescription
+    return _todoDescriptionController.text;
+  }
+
+  @override
+  String getTitle() {
+    // TODO: implement getTitle
+    return _todoTitleController.text;
+  }
+
+  @override
+  void setDescription(String description) {
+      // TODO: implement setDescription
+    _todoDescriptionController.text = description;
+  }
+
+  @override
+  void setTitle(String title) {
+    // TODO: implement setTitle
+    _todoTitleController.text = title;
+  }
+
+  @override
+  BuildContext getContext() {
+    // TODO: implement getContext
+    return context;
   }
 }

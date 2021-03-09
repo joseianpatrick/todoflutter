@@ -1,5 +1,6 @@
 
-import 'package:todoflutter/todo/backend/todo/repository/source/network/TodoNetworkDataSource.dart';
+
+import 'package:todoflutter/core/backend/todo/repository/source/network/TodoNetworkDataSource.dart';
 
 import '../todo.dart';
 import 'TodoDataSource.dart';
@@ -23,13 +24,19 @@ class TodoRepository implements TodoDataSource {
   @override
   Future<Todo> update(Todo t) {
   // TODO: implement update
-  throw UnimplementedError();
+    return _todoNetworkDataSource.update(t);
   }
 
   @override
   Future<List<Todo>> getAll() async{
     // TODO: implement getAll
     return _todoNetworkDataSource.getAll();
+  }
+
+  @override
+  Future deleteAll(List<String> todos) {
+    // TODO: implement deleteAll
+    return _todoNetworkDataSource.deleteAll(todos);
   }
   
 

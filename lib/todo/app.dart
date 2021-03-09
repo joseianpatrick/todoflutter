@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todoflutter/todo/createtodo.dart';
+import 'package:todoflutter/todo/presenter/TodoCreatePresenter.dart';
 import 'package:todoflutter/todo/presenter/TodoPresenter.dart';
 import 'todoscreen.dart';
 
@@ -11,13 +12,14 @@ class App extends StatelessWidget{
     // debugPaintSizeEnabled = true;
     return MaterialApp(
         debugShowCheckedModeBanner: false,
+      
         theme: ThemeData(
           primaryColor: Colors.white
         ),
-        home: MyHomePage(new TodoPresenter()),
+        home: TodoScreen(new TodoPresenter()),
         routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => this,
-        '/createtodo': (BuildContext context) => CreateTodo()
+        TodoScreen.routeName: (BuildContext context) => this,
+        CreateTodo.routeName: (BuildContext context) => CreateTodo(todoCreatePresenter: new TodoCreatePresenter())
       },
     );
   }

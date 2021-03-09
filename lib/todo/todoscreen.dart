@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:todoflutter/core/backend/todo/todo.dart';
 import 'package:todoflutter/todo/presenter/TodoPresenter.dart';
 import 'package:todoflutter/todo/view/TodoView.dart';
 import 'todolist.dart';
-import 'backend/todo/todo.dart';
 import 'dart:async' show Future;
 
-class MyHomePage extends StatefulWidget {
+class TodoScreen extends StatefulWidget {
 
-  final TodoPresenter _todoPresenter;
+  static const routeName = '/home';
 
-  MyHomePage(this._todoPresenter,{Key key, this.todo}) : super(key: key);
+  final TodoPresenter todoPresenter;
 
+  TodoScreen(this.todoPresenter,{Key key, this.todo}) : super(key: key);
 
   final Todo todo;
 
-
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _TodoScreenState createState() => _TodoScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> implements TodoView{
+class _TodoScreenState extends State<TodoScreen> implements TodoView{
 
   Future<List<Todo>> ftodos;
   List<Todo> todos = [];
@@ -28,11 +28,23 @@ class _MyHomePageState extends State<MyHomePage> implements TodoView{
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget._todoPresenter.todoView = this;
-    widget._todoPresenter.buildListView();
+    widget.todoPresenter.todoView = this;
+    widget.todoPresenter.buildListView();
+
   }
 
-  
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget (StatefulWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+  }
+    
     _showDeleteTodoDialog(BuildContext context){
     return showDialog(context: context,barrierDismissible: true,builder: (param){
       return AlertDialog(
@@ -45,6 +57,8 @@ class _MyHomePageState extends State<MyHomePage> implements TodoView{
             ),
           FlatButton(
             onPressed: () {
+              List<Todo> ts = todos.where((element) => element.checked).toList();
+              widget.todoPresenter.deleteSelected(ts);
               todos.removeWhere((element) => element.checked);
               setState(() {}); 
               Navigator.pop(context);
@@ -62,8 +76,6 @@ class _MyHomePageState extends State<MyHomePage> implements TodoView{
 
   @override
   Widget build(BuildContext context) {
-    widget._todoPresenter.context = context;
-
     return Scaffold(
       appBar: AppBar(
         title: Text("To Do List"),
@@ -81,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> implements TodoView{
       floatingActionButton: FloatingActionButton(
         tooltip: 'Create To Do',
         child: Icon(Icons.add),
-        onPressed: () =>  widget._todoPresenter.createClick(), 
+        onPressed: () =>  widget.todoPresenter.createClick(), 
       )
     );
   }
@@ -101,6 +113,12 @@ class _MyHomePageState extends State<MyHomePage> implements TodoView{
      setState(() {
         this.todos.add(todo);
       });
+  }
+
+  @override
+  BuildContext getContext() {
+    // TODO: implement getContext
+    return context;
   }
 }
 

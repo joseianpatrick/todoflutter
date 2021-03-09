@@ -10,6 +10,7 @@ class TodoNetworkMapper implements Mapper<String,Todo>{
 
     Map<String, dynamic> json = jsonDecode(f);
     Todo todo = new Todo();
+    todo.id = json['id'];
     todo.title = json['title'];
     todo.description = json['description'];
     return todo;
@@ -24,7 +25,11 @@ class TodoNetworkMapper implements Mapper<String,Todo>{
   @override
   String mapToFrom(Todo t) {
     // TODO: implement mapToFrom
-     throw UnimplementedError();
+    String json = jsonEncode(<String, String>{
+      'title': t.title,
+      'description': t.description,
+    });
+    return json;
   }
 
   List<Map> mapToFromList(String listResponse) {

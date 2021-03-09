@@ -1,6 +1,8 @@
 
-import 'package:todoflutter/todo/backend/todo/repository/TodoRepository.dart';
-import 'package:todoflutter/todo/backend/todo/todo.dart';
+
+import 'package:todoflutter/core/backend/todo/repository/TodoRepository.dart';
+
+import '../todo.dart';
 
 class GetAllTodoUseCase {
   TodoRepository _todoRepository = new TodoRepository();

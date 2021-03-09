@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todoflutter/todo/createtodo.dart';
-import 'backend/todo/todo.dart';
+import 'package:todoflutter/core/backend/todo/todo.dart';
+
 class TodoList extends StatefulWidget{
   
   final List<Todo> todos;
@@ -50,18 +50,17 @@ class _TodoListState extends State<TodoList>{
         },
     );
   }
-    Future _buttonTapped(int index) async {
-      final dataFromSecondPage = await Navigator.push(
+  Future _buttonTapped(int index) async {
+      final dataFromSecondPage = await Navigator.pushNamed(
             context,
-            MaterialPageRoute(builder: (context) => new CreateTodo(todo:widget.todos[index]))) as Todo;
-  
-    if (dataFromSecondPage != null) {
-       final todo = widget.todos.firstWhere((element) => element.id == index);
-
-      setState(() {
-        todo.title = dataFromSecondPage.title;
-        todo.description = dataFromSecondPage.description;
-      });
-    }
+            '/createtodo',
+            arguments: widget.todos[index]) as Todo;
+      if (dataFromSecondPage != null) {
+          final todo = widget.todos.firstWhere((element) => element.id == dataFromSecondPage.id);
+          setState(() {
+            todo.title = dataFromSecondPage.title;
+            todo.description = dataFromSecondPage.description;
+          });
+      }
   }
 }
