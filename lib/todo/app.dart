@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todoflutter/todo/createtodo.dart';
-import 'homescreen.dart';
+import 'package:todoflutter/todo/presenter/TodoPresenter.dart';
+import 'todoscreen.dart';
 
 // import 'package:flutter/rendering.dart';
 
@@ -13,7 +14,7 @@ class App extends StatelessWidget{
         theme: ThemeData(
           primaryColor: Colors.white
         ),
-        home: MyHomePage(),
+        home: MyHomePage(new TodoPresenter()),
         routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => this,
         '/createtodo': (BuildContext context) => CreateTodo()
